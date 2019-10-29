@@ -26,8 +26,8 @@ class User(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed!"""
         return f"<User user_id={self.user_id} email={self.email}>"
-        
-# Put your Movie and Rating model classes here.
+
+
 class Rating(db.Model):
     """User/Movie ratings on ratings website"""
 
