@@ -42,10 +42,16 @@ def load_movies():
 
     for row in open("seed_data/u.item"):
         row = row.rstrip().split("|")
-        movie_id = row[0]
-        movie_title = row[1][:-7]
-        released_at = datetime.strptime(row[2], "%d-%b-%Y")
-        imdb_url = row[4]
+
+        (movie_id,
+         movie_title,
+         released_at,
+         _,
+         imdb_url,
+         ) = row[:5]  
+
+        movie_title = movie_title[:-7]
+        released_at = datetime.strptime(released_at, "%d-%b-%Y")
 
         movie = Movie(movie_id=movie_id,
                       movie_title=movie_title,
@@ -59,7 +65,6 @@ def load_movies():
     print("Movies")
 
 
-
 def load_ratings():
     """Load ratings from u.data into database."""
 
@@ -67,16 +72,18 @@ def load_ratings():
 
     for row in open("seed_data/u.data"):
         row = row.rstrip().split("\t")
-        user_id = row[0]
-        movie_id = row[1]
-        score = row[2]
+        (user_id,
+        movie_id,
+        score,
+        _,
+        ) = row 
 
         rating = Rating(user_id=user_id,
                         movie_id=movie_id,
                         score=score)
 
         db.session.add(rating)
-
+        
     db.session.commit()
 
     print("Ratings")

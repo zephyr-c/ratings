@@ -38,6 +38,10 @@ class Rating(db.Model):
     user_id = db.Column(db.Integer, nullable=False)
     score = db.Column(db.Integer, nullable=False)
 
+    def __repr__(self):
+
+        return f"<Rating_id={self.rating_id} score={self.score}>"
+
 class Movie(db.Model):
     """Movie on ratings website"""
 
@@ -47,6 +51,10 @@ class Movie(db.Model):
     movie_title = db.Column(db.String(100), nullable=False)
     released_at = db.Column(db.DateTime, nullable=True)
     imdb_url = db.Column(db.String(200), nullable=True)
+
+    def __repr__(self):
+
+        return f"<Movie_id={self.movie_id} movie_title={self.movie_title}>"
 
 ##############################################################################
 # Helper functions
