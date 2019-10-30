@@ -2,13 +2,27 @@
 
 {% block content %}
 
-thing
-
-User email = {{ user.email }}<br>
-User ratings <ul>{% for rating in user.ratings %}
-    <li> {{ rating.movie.movie_title }}</li>
-    {% endfor %}
-</ul>
+<h1>User Profile</h1>
+User eMail = {{ user.email }}<br>
+User Age = {{ user.age }}<br>
+User Zip Code = {{ user.zipcode }}<br>
+<h2>User Movie Ratings</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Movie Name</th>
+                <th>Movie Rating</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rating in user.ratings %}
+            <tr>
+                <td>{{ rating.movie.movie_title }}</td>
+                <td>{{ rating.score }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
 
 

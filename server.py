@@ -85,7 +85,7 @@ def process_login():
         else:  # password matches
             session['user_id'] = user_lookup.user_id
             flash(f"{user_lookup.email} logged in!")
-            return redirect("/")
+            return redirect(f"/users/{session['user_id']}")
     else:  # user doesn't exist
         flash(f"{login_attempt['email']} doesn't exist. Create an account below!")
         return redirect("/register")
