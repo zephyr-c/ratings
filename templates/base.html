@@ -12,6 +12,13 @@
 
     Ratings
     <a href="/register">Create Account</a>
+
+    {% if session.get('user_id') %}
+        <a href="/logout">Log out 🔓</a>
+    {% else %}
+        <a href="/login">Log in 🔒</a>
+    {% endif %}
+
     <hr> <!-- fancy break !-->
 
     {% block content %} CONTENT GOES HERE {% endblock %}

@@ -90,6 +90,14 @@ def process_login():
         flash(f"{login_attempt['email']} doesn't exist. Create an account below!")
         return redirect("/register")
 
+@app.route("/logout")
+def process_logout():
+
+    # delete user_id from Flask session
+    del session['user_id']
+
+    return redirect('/')
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the
