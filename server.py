@@ -147,7 +147,7 @@ def add_rating(movie_id):
             db.session.add(new_rating)
             db.session.commit()
             flash(f"Rating added for {movie.movie_title}")
-            return redirect(f"movie/{movie.movie_id}")
+            return redirect(f"/movies/{movie.movie_id}")
 
 
         # another query to see if they've already rated the movie
