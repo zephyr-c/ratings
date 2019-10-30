@@ -52,12 +52,12 @@ def register_process():
 
     if User.query.filter(User.email == user_email).first():
         flash(f"{user_email} already exists")
-        return redirect("/register")
-        # return User.query.filter(User.email == user_email).one()
+        return redirect("/login")
     else:
         new_user = User(email=user_email, password=user_password)
         db.session.add(new_user)
         db.session.commit()
+        session['user_id'] = new_user.user_id
         flash("User successfully added")
     
     return redirect("/")
@@ -97,6 +97,17 @@ def process_logout():
     del session['user_id']
 
     return redirect('/')
+
+@app.route("/users/<user_id>")
+def show_user(user_id):
+
+    user = User.query.filter(User.user_id == user_id).one()
+
+    print('\n' * 3)
+    print(user)
+    print('\n' * 3)
+
+    return render_template('user_detail.html', user=user)
 
 
 if __name__ == "__main__":
