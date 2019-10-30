@@ -2,10 +2,10 @@
 
 from jinja2 import StrictUndefined
 
-from flask import Flask
+from flask import (Flask, render_template, redirect, request, flash, session)
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import connect_to_db, db
+from model import User, Rating, Movie, connect_to_db, db
 
 
 app = Flask(__name__)
@@ -19,10 +19,47 @@ app.secret_key = "ABC"
 app.jinja_env.undefined = StrictUndefined
 
 
-@app.route('/')
+@app.route('/', methods=["POST", "GET"])
 def index():
     """Homepage."""
-    return "<html><body>Placeholder for the homepage.</body></html>"
+    return render_template("homepage.html")
+
+@app.route('/users')
+def user_list():
+    """Show list of users."""
+
+    users = User.query.all()
+    return render_template("user_list.html", users=users)
+
+@app.route('/register', methods=["GET"])
+def register_form():
+    """Show user registration form"""
+
+    return render_template("registration.html")
+
+@app.route('/register', methods=["POST"])
+def register_process():
+    """Handles submission of the login form"""
+
+    # query for the email address in our DB
+        # if the email is not in the database
+            # create new user in DB
+        # if the email IS in the database
+            # flash message for this user already exists (or alert box?)
+
+    user_email = request.form.get('user_email')
+    user_password = request.form.get('user_password')
+
+    if User.query.filter(User.email == user_email).first():
+        return User.query.filter(User.email == user_email).one()
+    else:
+        new_user = User(email=user_email, password=user_password)
+        db.session.add(new_user)
+        db.session.commit()
+        flash("User successfully added")
+    
+    return redirect("/")
+
 
 
 if __name__ == "__main__":

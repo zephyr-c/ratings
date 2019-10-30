@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ratings</title>
+</head>
+<body>
+    {% for message in get_flashed_messages() %}
+    <ul>
+        <li>{{ message }}</li>
+    </ul>
+    {% endfor %}
+
+    Ratings
+    <hr> <!-- fancy break !-->
+
+    {% block content %} CONTENT GOES HERE {% endblock %}
+
+</body>
+</html>
