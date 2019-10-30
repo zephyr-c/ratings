@@ -51,7 +51,9 @@ def register_process():
     user_password = request.form.get('user_password')
 
     if User.query.filter(User.email == user_email).first():
-        return User.query.filter(User.email == user_email).one()
+        flash(f"{user_email} already exists")
+        return redirect("/register")
+        # return User.query.filter(User.email == user_email).one()
     else:
         new_user = User(email=user_email, password=user_password)
         db.session.add(new_user)
@@ -60,6 +62,33 @@ def register_process():
     
     return redirect("/")
 
+@app.route('/login', methods=["GET"])
+def show_login():
+    """Show login form"""
+
+    return render_template("login.html")
+
+@app.route('/login', methods=["POST"])
+def process_login():
+    """Log user in to site. Query for email address in database, check for password
+    match, and add user id to Flask session if email exists and passwords match"""
+
+    login_attempt = request.form
+
+    user_lookup = User.query.filter(User.email == login_attempt['email']).first()
+
+    if user_lookup:
+        # check if password matches & handle incorrect and correct pw flows
+        if user_lookup.password != login_attempt['password']:
+            flash("Incorrect Password!")
+            return redirect("/login")
+        else:  # password matches
+            session['user_id'] = user_lookup.user_id
+            flash(f"{user_lookup.email} logged in!")
+            return redirect("/")
+    else:  # user doesn't exist
+        flash(f"{login_attempt['email']} doesn't exist. Create an account below!")
+        return redirect("/register")
 
 
 if __name__ == "__main__":

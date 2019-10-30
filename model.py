@@ -46,7 +46,7 @@ class Rating(db.Model):
                             backref=db.backref("ratings", order_by=rating_id))
 
     movie = db.relationship("Movie", 
-                            backref=db.backref("ratings", order_by=rating_id))
+                            backref=db.backref  ("ratings", order_by=rating_id))
 
     def __repr__(self):
 
