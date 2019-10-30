@@ -31,6 +31,13 @@ def user_list():
     users = User.query.all()
     return render_template("user_list.html", users=users)
 
+@app.route('/movies')
+def movie_list():
+    """Show list of users."""
+
+    movies = Movie.query.order_by('movie_title').all()
+    return render_template("movie_list.html", movies=movies)
+
 @app.route('/register', methods=["GET"])
 def register_form():
     """Show user registration form"""
@@ -108,6 +115,52 @@ def show_user(user_id):
     print('\n' * 3)
 
     return render_template('user_detail.html', user=user)
+
+@app.route("/movies/<movie_id>")
+def show_movie(movie_id):
+
+    movie = Movie.query.filter(Movie.movie_id == movie_id).one()
+
+    return render_template('movie_detail.html', movie=movie)
+
+@app.route("/movies/<movie_id>/rate", methods=["POST"])
+def add_rating(movie_id):
+
+    movie = Movie.query.filter(Movie.movie_id == movie_id).one()
+    user_id = session.get('user_id')
+    rating = request.form.get('rating')
+
+    print('\n' * 3)
+    print(rating)
+    print('\n' * 3)
+
+    # check to see if user is logged in
+    if user_id:
+        user = User.query.filter(User.user_id == user_id).one()
+        new_rating = Rating.query.filter(Rating.user_id == user.user_id, 
+                                     Rating.movie_id == movie.movie_id).first()
+        if new_rating:
+            return "User already rated maybe?"
+        else:
+            new_rating = Rating(user_id=user_id, movie_id=movie.movie_id,
+                                score=rating)
+            db.session.add(new_rating)
+            db.session.commit()
+            flash(f"Rating added for {movie.movie_title}")
+            return redirect(f"movie/{movie.movie_id}")
+
+
+        # another query to see if they've already rated the movie
+        # SQL = """SELECT * FROM RATINGS 
+        # WHERE user_id = user.id AND movie_id = movie.id
+        # """ 
+        # and if that doesn't return none, update that ratings row, otherwise
+        # create new rating
+
+
+    else:
+        flash("You need to be signed in to rate a movie")
+        return redirect(f"movie/{movie.movie_id}")
 
 
 if __name__ == "__main__":

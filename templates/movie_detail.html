@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Movie Details</h1>
+Movie Title = {{ movie.movie_title }}<br>
+Release Date = {{ movie.released_at }}<br><br>
+
+<h3>Add or update your rating</h3>
+<form action="/movies/{{movie.movie_id}}/rate" method="POST">
+    Score: <select name="rating">
+            {% for i in range(1, 6) %}
+            <option value={{ i }}>{{ i }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit">
+    </form>
+
+<a href="/movies/{{movie.movie_id}}/rate">Rate this movie!</a><br><br>
+<h2>Movie Ratings</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Movie Rating</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rating in movie.ratings %}
+            <tr>
+                <td>{{ rating.user.email }}</td>
+                <td>{{ rating.score }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+{% endblock %}
