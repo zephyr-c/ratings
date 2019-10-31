@@ -42,6 +42,29 @@ class User(db.Model):
         else:
             return 0.0
 
+    def predict_rating(self, movie):
+        """Predict user's rating of a movie."""
+
+        other_ratings = movie.ratings
+        other_users = [ r.user for r in other_ratings ]
+
+        similarities = [
+            (self.similarity(other_user), other_user)
+            for other_user in other_users
+        ]
+
+        similarities.sort(reverse=True)
+        sim, best_match_user = similarities[0]
+
+        for rating in other_ratings:
+            if rating.user_id == best_match_user.user_id:
+                return rating.score * sim
+
+    def __lt__(self, other):
+
+        return self.user_id < other.user_id
+
+
     def __repr__(self):
         """Provide helpful representation when printed!"""
         return f"<User user_id={self.user_id} email={self.email}>"
