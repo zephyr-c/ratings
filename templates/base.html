@@ -2,26 +2,33 @@
 <html>
 <head>
     <title>Ratings</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    {% for message in get_flashed_messages() %}
-    <ul>
-        <li>{{ message }}</li>
-    </ul>
-    {% endfor %}
+    <div id="page-container">
+        {% for message in get_flashed_messages() %}
+        <ul>
+            <li>{{ message }}</li>
+        </ul>
+        {% endfor %}
+        <div id="content-wrap">
+            <a href="/">Ratings</a>
+            <a href="/register">Create Account</a>
 
-    <a href="/">Ratings</a>
-    <a href="/register">Create Account</a>
+            {% if session.get('user_id') %}
+                <a href="/logout">Log out 🔓</a>
+            {% else %}
+                <a href="/login">Log in 🔒</a>
+            {% endif %}
 
-    {% if session.get('user_id') %}
-        <a href="/logout">Log out 🔓</a>
-    {% else %}
-        <a href="/login">Log in 🔒</a>
-    {% endif %}
+            <hr> <!-- fancy break !-->
 
-    <hr> <!-- fancy break !-->
-
-    {% block content %} CONTENT GOES HERE {% endblock %}
-
+            {% block content %} CONTENT GOES HERE {% endblock %}
+        </div>
+        <footer id="footer">
+            <a href="/movies">Movies</a> ||
+            <a href="/users">Users</a>
+        </footer>
+    </div>
 </body>
 </html>
