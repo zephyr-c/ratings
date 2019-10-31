@@ -17,7 +17,9 @@ User Zip Code = {{ user.zipcode }}<br>
         <tbody>
             {% for rating in user.ratings %}
             <tr>
-                <td>{{ rating.movie.movie_title }}</td>
+                <td><a href="/movies/{{rating.movie.movie_id}}">
+                    {{ rating.movie.movie_title }}
+                </a></td>
                 <td>{{ rating.score }}</td>
             </tr>
             {% endfor %}

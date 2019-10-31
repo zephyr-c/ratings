@@ -48,12 +48,6 @@ def register_form():
 def register_process():
     """Handles submission of the login form"""
 
-    # query for the email address in our DB
-        # if the email is not in the database
-            # create new user in DB
-        # if the email IS in the database
-            # flash message for this user already exists (or alert box?)
-
     user_email = request.form.get('user_email')
     user_password = request.form.get('user_password')
 
@@ -110,10 +104,6 @@ def show_user(user_id):
 
     user = User.query.filter(User.user_id == user_id).one()
 
-    print('\n' * 3)
-    print(user)
-    print('\n' * 3)
-
     return render_template('user_detail.html', user=user)
 
 @app.route("/movies/<movie_id>")
@@ -125,14 +115,11 @@ def show_movie(movie_id):
 
 @app.route("/movies/<movie_id>/rate", methods=["POST"])
 def add_rating(movie_id):
+    """Adds or Updates Movie rating for logged in user. Redirects if not logged in. """
 
     movie = Movie.query.filter(Movie.movie_id == movie_id).one()
     user_id = session.get('user_id')
     rating = request.form.get('rating')
-
-    print('\n' * 3)
-    print(rating)
-    print('\n' * 3)
 
     # check to see if user is logged in
     if user_id:
@@ -140,7 +127,11 @@ def add_rating(movie_id):
         new_rating = Rating.query.filter(Rating.user_id == user.user_id, 
                                      Rating.movie_id == movie.movie_id).first()
         if new_rating:
-            return "User already rated maybe?"
+            new_rating.score = rating
+            db.session.commit()
+            flash("Updated Movie Rating")
+
+            return redirect(f"/movies/{movie.movie_id}")
         else:
             new_rating = Rating(user_id=user_id, movie_id=movie.movie_id,
                                 score=rating)
@@ -149,18 +140,9 @@ def add_rating(movie_id):
             flash(f"Rating added for {movie.movie_title}")
             return redirect(f"/movies/{movie.movie_id}")
 
-
-        # another query to see if they've already rated the movie
-        # SQL = """SELECT * FROM RATINGS 
-        # WHERE user_id = user.id AND movie_id = movie.id
-        # """ 
-        # and if that doesn't return none, update that ratings row, otherwise
-        # create new rating
-
-
     else:
         flash("You need to be signed in to rate a movie")
-        return redirect(f"movie/{movie.movie_id}")
+        return redirect(f"/movies/{movie.movie_id}")
 
 
 if __name__ == "__main__":

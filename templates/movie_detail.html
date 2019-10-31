@@ -16,7 +16,6 @@ Release Date = {{ movie.released_at }}<br><br>
         <input type="submit">
     </form>
 
-<a href="/movies/{{movie.movie_id}}/rate">Rate this movie!</a><br><br>
 <h2>Movie Ratings</h2>
     <table>
         <thead>
@@ -28,7 +27,7 @@ Release Date = {{ movie.released_at }}<br><br>
         <tbody>
             {% for rating in movie.ratings %}
             <tr>
-                <td>{{ rating.user.email }}</td>
+                <td><a href="/users/{{rating.user.user_id}}">{{ rating.user.email }}</a></td>
                 <td>{{ rating.score }}</td>
             </tr>
             {% endfor %}
